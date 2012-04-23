@@ -2,15 +2,23 @@ package DDG::Spice::Expatistan;
 
 use DDG::Spice;
 
-triggers any => "cost", "living";
+triggers query_lc => qr/cost of living/;
 
-spice to => 'http://www.expatistan.com/api/spice?q=$1&api_key=wideopen';
+sub nginx_conf {
+    my $api_key = $ENV{DDG_SPICE_EXPATISTAN_APIKEY}; 
+    return unless defined $api_key;
+    $nginx_conf = <<"__END_OF_CONF__";
+
+location ^~ /js/spice/expatistan/ {
+    rewrite ^/js/spice/expatistan/(.*) /api/spice?q=\$1&api_key=$api_key break;
+    proxy_pass http://www.expatistan.com/;
+}
+
+__END_OF_CONF__
+}
 
 handle query_lc => sub {
-    if ($_ =~ /cost of living/) {
-	    return $1 if $1;
-    }
-    return;
+    return $_;
 };
 
 1;
