@@ -1,0 +1,48 @@
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script>
+  function nrupc(data){
+    if (data.hits.length){
+      var hit = data.hits[0];
+      var content = '';
+      //console.log(hit);
+      if (data.hits[0].lowestnewprice && hit.lowestnewprice != '-1'){
+        content += '<b>Price New: </b>$'+data.hits[0].lowestnewprice+'</br>';
+      }
+      if (hit.lowestusedprice && hit.lowestusedprice != '-1'){
+        content += '<b>Price Used: </b>$'+hit.lowestusedprice+'</br>';
+      }
+      if (hit.lowestrefurbprice && hit.lowestrefurbprice != '-1'){
+        content += '<b>Price Refurbished: </b>$'+hit.lowestrefurbprice+'</br>';
+      }
+
+
+      //console.log(content);
+      items = [[]];
+      items[0]['a'] = content;
+      items[0]['h'] = data.hits[0].title;
+      items[0]['s'] = 'Shopobot';
+      items[0]['u'] = data.hits[0].url;
+      items[0]['i'] = data.hits[0].image400;
+      
+      document.write(content);
+
+      //console.log(items);
+      //nra(items);
+    }
+  }
+
+var upc = '885909051878'
+  
+$(document).ready(function(){
+  $.ajax({
+    url: 'http://api.shopobot.com/api/v1_0/find.json?key=qepedudequtHukugufrawumaw8d7ec&q=UPC:' + upc,
+    dataType: 'json',
+    success: nrupc
+  });
+});
+</script>
+</head>
+<body>
+  
+</body>
